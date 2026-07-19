@@ -1,0 +1,610 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: #000000;
+  --color-foreground: #ffffff;
+  --color-border: #ffffff;
+  --color-input: #ffffff;
+  --color-ring: #ffffff;
+
+  --color-primary: #ffffff;
+  --color-primary-foreground: #000000;
+
+  --font-mono: 'Space Mono', monospace;
+  --font-sans: 'Space Mono', monospace;
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+}
+
+:root {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --border: 0 0% 100%;
+  --input: 0 0% 100%;
+  --ring: 0 0% 100%;
+  
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 0%;
+
+  --card: 0 0% 0%;
+  --card-foreground: 0 0% 100%;
+  --card-border: 0 0% 100%;
+
+  --popover: 0 0% 0%;
+  --popover-foreground: 0 0% 100%;
+  --popover-border: 0 0% 100%;
+
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 0 0% 100%;
+  
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 70%;
+
+  --accent: 0 0% 15%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 0 0% 100%;
+
+  --radius: 0px;
+}
+
+.dark {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --border: 0 0% 100%;
+  --input: 0 0% 100%;
+  --ring: 0 0% 100%;
+  
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 0%;
+
+  --card: 0 0% 0%;
+  --card-foreground: 0 0% 100%;
+  --card-border: 0 0% 100%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply font-mono antialiased bg-background text-foreground selection:bg-white selection:text-black;
+  }
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  background: transparent;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 0;
+  margin-top: -7px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  background: #fff;
+}
+input[type=range]::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 0;
+  border: none;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  background: #fff;
+}
+
+/* ── Layout ────────────────────────────────────────────────────────────── */
+.app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+  font-family: 'Space Mono', monospace;
+}
+
+/* ── Header ────────────────────────────────────────────────────────────── */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid #fff;
+  flex-shrink: 0;
+}
+.app-title {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.header-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────── */
+.ctrl-btn {
+  padding: 6px 14px;
+  border: 1px solid #fff;
+  background: transparent;
+  color: #fff;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.ctrl-btn:hover {
+  background: #fff;
+  color: #000;
+}
+.ctrl-btn--active {
+  background: #fff;
+  color: #000;
+}
+
+.source-btn {
+  padding: 14px 32px;
+  border: 1px solid #fff;
+  background: transparent;
+  color: #fff;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  width: 100%;
+}
+.source-btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* ── Settings panel — desktop: slides down under header ────────────────── */
+.settings-backdrop { display: none; }
+.drawer-handle     { display: none; }
+
+.settings-panel {
+  overflow: hidden;
+  max-height: 0;
+  border-bottom: 0px solid #fff;
+  transition: max-height 0.3s ease, border-bottom-width 0.3s ease, padding 0.3s ease;
+  padding: 0 24px;
+  flex-shrink: 0;
+}
+.settings-panel--open {
+  max-height: 420px;
+  border-bottom-width: 1px;
+  padding: 20px 24px;
+}
+
+/* ── Settings panel — mobile: bottom drawer ────────────────────────────── */
+@media (max-width: 640px) {
+  .settings-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  .settings-panel {
+    /* reset desktop styles */
+    overflow-y: auto;
+    max-height: none;
+    border-bottom: none;
+    padding: 0;
+    /* drawer positioning */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: #000;
+    border-top: 1px solid #fff;
+    transform: translateY(100%);
+    transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+    /* safe-area for notched phones */
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+    max-height: 82dvh;
+  }
+  .settings-panel--open {
+    transform: translateY(0);
+    max-height: 82dvh;
+    border-bottom-width: 0;
+    padding: 0 0 env(safe-area-inset-bottom, 16px);
+  }
+
+  /* drag handle pill at top of drawer */
+  .drawer-handle {
+    display: block;
+    width: 36px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    margin: 12px auto 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .settings-grid {
+    padding: 16px 20px 24px;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 28px;
+    overflow-y: auto;
+  }
+
+  .setting-section + .setting-section {
+    padding-left: 0;
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding-top: 20px;
+  }
+}
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px 40px;
+}
+
+/* ── Setting rows ──────────────────────────────────────────────────────── */
+.setting-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.setting-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.setting-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.7;
+}
+.setting-value {
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  opacity: 0.9;
+}
+.range-input {
+  width: 100%;
+}
+.toggle-row {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.toggle-btn {
+  padding: 3px 10px;
+  border: 1px solid rgba(255,255,255,0.4);
+  background: transparent;
+  color: rgba(255,255,255,0.4);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.toggle-btn:hover {
+  border-color: #fff;
+  color: #fff;
+}
+.toggle-btn--on {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+}
+
+/* ── Idle state ────────────────────────────────────────────────────────── */
+.idle-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+}
+.idle-card {
+  border: 1px solid #fff;
+  padding: clamp(32px, 6vw, 80px) clamp(24px, 8vw, 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 560px;
+  width: 100%;
+}
+.idle-tagline {
+  font-size: clamp(0.75rem, 2vw, 1rem);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  opacity: 0.6;
+  margin-bottom: 40px;
+  text-align: center;
+}
+.idle-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+@media (min-width: 480px) {
+  .idle-buttons {
+    flex-direction: row;
+  }
+}
+
+/* ── Active main ───────────────────────────────────────────────────────── */
+.active-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px 24px;
+  min-height: 0;
+}
+
+/* ── Panels ────────────────────────────────────────────────────────────── */
+.panels {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  min-height: 0;
+}
+.panels--single {
+  grid-template-columns: 1fr;
+}
+@media (max-width: 640px) {
+  .panels {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+}
+
+.panel {
+  border: 1px solid #fff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  min-height: 200px;
+}
+.panel-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 4px 10px;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  background: #000;
+}
+.panel-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.panel-video--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.panel-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.panel-status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  background: #000;
+}
+.panel-status-text {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  opacity: 0.7;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1;   }
+}
+.mt-4 { margin-top: 16px; }
+
+/* ── Header left cluster ───────────────────────────────────────────────── */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.fps-badge {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  opacity: 0.5;
+  min-width: 48px;
+}
+.conversion-badge {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: #fff;
+  opacity: 0.75;
+  white-space: nowrap;
+  animation: pulse 1s ease-in-out infinite alternate;
+}
+@keyframes pulse {
+  from { opacity: 0.45; }
+  to   { opacity: 1; }
+}
+
+/* ── Recording controls ────────────────────────────────────────────────── */
+.rec-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.4;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.rec-dot--live {
+  opacity: 1;
+  animation: blink 1s step-start infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.2; }
+}
+.ctrl-btn--stop-rec {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+  font-weight: 700;
+}
+.ctrl-btn--stop-rec:hover {
+  background: #ddd;
+  border-color: #ddd;
+}
+.ctrl-btn--rec {
+  border-color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.6);
+}
+.ctrl-btn--rec:hover {
+  border-color: #fff;
+  color: #fff;
+}
+.ctrl-btn--download {
+  border-color: #fff;
+  color: #fff;
+}
+.ctrl-btn--download:hover {
+  background: rgba(255,255,255,0.1);
+}
+.panel-rec-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 20;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  padding: 4px 8px;
+  border-left: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  background: #000;
+  animation: blink 1s step-start infinite;
+}
+
+/* ── Settings sections ─────────────────────────────────────────────────── */
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0;
+}
+.setting-section {
+  padding: 0 24px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.setting-section + .setting-section {
+  padding-left: 24px;
+  border-left: 1px solid rgba(255,255,255,0.15);
+}
+.section-title {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  opacity: 0.35;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ── Select button group ───────────────────────────────────────────────── */
+.select-group {
+  display: flex;
+  gap: 0;
+  margin-top: 4px;
+}
+.select-opt {
+  flex: 1;
+  padding: 4px 0;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-right-width: 0;
+  background: transparent;
+  color: rgba(255,255,255,0.4);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.1s;
+  text-align: center;
+}
+.select-opt:last-child {
+  border-right-width: 1px;
+}
+.select-opt:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+.select-opt--on {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+}
+/* keep adjacent active borders clean */
+.select-opt--on + .select-opt {
+  border-left-color: #fff;
+}
+
+/* ── Settings panel height increase for 3-section grid ────────────────── */
+.settings-panel--open {
+  max-height: 420px;
+}

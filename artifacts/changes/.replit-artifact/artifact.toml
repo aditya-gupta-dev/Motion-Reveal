@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Changes"
+version = "1.0.0"
+id = "artifacts/changes"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24291
+
+[services.development]
+run = "pnpm --filter @workspace/changes run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/changes", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/changes/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24291"
+BASE_PATH = "/"
